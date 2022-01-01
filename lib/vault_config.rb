@@ -13,7 +13,7 @@ class VaultConfig
   end
 
   # https://learn.hashicorp.com/tutorials/vault/tokens
-  def self.renew(token = nil)
+  def self.renew(token = nil, increment = '12h')
     uri = URI(File.join(ENV['VAULT_ADDR'], '/v1/auth/token/renew'))
     header = {
       'X-Vault-Token':  ENV['VAULT_TOKEN'],
@@ -21,9 +21,10 @@ class VaultConfig
     }
     response = Net::HTTP.post(uri, {
       token: token || ENV['VAULT_TOKEN'],
-      increment: "60"
+      increment: increment,
     }.to_json, header)
     puts response.body
+    JSON.parse(response.body)
   end
 
   def load!

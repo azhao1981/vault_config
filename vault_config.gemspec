@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'vault_config'
-  s.version     = '0.0.2'
+  s.version     = '0.1.0'
   s.summary     = "Vault for Ruby in a easy and secure way"
   s.description = "default safe in a easy way by using HashiCorp Vault"
   s.authors     = ["azhao"]
