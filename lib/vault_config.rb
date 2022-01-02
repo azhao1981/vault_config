@@ -23,20 +23,32 @@ class VaultConfig
       token: token || ENV['VAULT_TOKEN'],
       increment: increment,
     }.to_json, header)
-    puts response.body
     JSON.parse(response.body)
   end
 
   def load!
-    header = {'X-Vault-Token': ENV['VAULT_TOKEN']}
-    response = Net::HTTP.get_response(client_uri, header)
-    JSON.parse(response.body)['data']['data'].each do |k, v|
+    ret = get client_uri, headers
+    ret['data']['data'].each do |k, v|
       ENV[k] = v
     end
   end
 
+  private def get(uri, headers = {})
+    Net::HTTP.start(uri.host, uri.port) do |http|
+      request = Net::HTTP::Get.new uri, headers
+      response = http.request request
+      return JSON.parse(response.body)
+    end
+  end
+
+  private def headers
+    @headers ||= {}
+    @headers['X-Vault-Token'] = ENV['VAULT_TOKEN']
+    @headers
+  end
+
   private def client_uri
-    if @app.start_with?('/')
+    @client_uri ||= if @app.start_with?('/')
       arr = @app.split('/')
       arr[1] = "#{arr[1]}/data"
       URI(File.join(ENV['VAULT_ADDR'], 'v1/', arr.join('/')))
