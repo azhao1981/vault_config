@@ -12,6 +12,15 @@ class VaultConfig
     client.load!
   end
 
+  def self.load_with_warning(app)
+    begin
+      client = self.new(app)
+      client.load!
+    rescue => exception
+      puts "Warning: VaultConfig.load error --- ignore \n #{exception.message}"
+    end
+  end
+
   # https://learn.hashicorp.com/tutorials/vault/tokens
   def self.renew(token = nil, increment = '12h')
     uri = URI(File.join(ENV['VAULT_ADDR'], '/v1/auth/token/renew'))

@@ -9,6 +9,12 @@ class VaultConfigTest < Minitest::Test
     assert_equal "hello world", ENV["VAULT_CONFIG_TEST"]
   end
 
+  def test_load_without_exception
+    ENV['VAULT_CONFIG_TEST'] = nil
+    VaultConfig.load_with_warning('vault_config_tes1t')
+    assert_nil ENV["VAULT_CONFIG_TEST"]
+  end
+
   def test_load_path
     VaultConfig.load!('/secret/vault_config_test')
     assert_equal "hello world", ENV["VAULT_CONFIG_TEST"]

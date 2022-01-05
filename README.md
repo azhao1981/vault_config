@@ -14,3 +14,13 @@ VaultConfig.load!(SecretName)
 # renew current token
 VaultConfig.renew
 ```
+
+config rails
+
+```bash
+# vault config 
+RAILS_MASTER_KEY='xxxxx'
+
+EDITOR="code --wait" rails credentials:edit
+
+```
